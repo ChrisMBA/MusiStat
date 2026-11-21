@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MusiStat 🎧
 
-## Getting Started
+Application de statistiques Spotify : connecte ton compte et découvre tes artistes, titres et genres préférés.
 
-First, run the development server:
+## Stack
+
+- [Next.js](https://nextjs.org) 16 (App Router), React 19, TypeScript
+- [Tailwind CSS](https://tailwindcss.com) 4
+- [NextAuth](https://next-auth.js.org) v4 avec le provider Spotify (rafraîchissement automatique du token)
+- [Prisma](https://www.prisma.io) 7 + PostgreSQL
+
+## Installation
+
+### 1. Prérequis
+
+- Node.js 20 ou plus
+- Une base PostgreSQL
+- Une application Spotify créée sur le [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
+
+Dans les paramètres de l'app Spotify, ajoute cette Redirect URI :
+
+```
+http://127.0.0.1:3000/api/auth/callback/spotify
+```
+
+> Spotify n'accepte plus `localhost` dans les Redirect URI : utilise `127.0.0.1`.
+
+### 2. Variables d'environnement
+
+```bash
+cp .env.example .env
+```
+
+Puis remplis les valeurs :
+
+| Variable | Description |
+| --- | --- |
+| `SPOTIFY_CLIENT_ID` | Client ID de l'app Spotify |
+| `SPOTIFY_CLIENT_SECRET` | Client Secret de l'app Spotify |
+| `NEXTAUTH_SECRET` | Secret aléatoire (`openssl rand -base64 32`) |
+| `NEXTAUTH_URL` | URL de l'app, ex. `http://127.0.0.1:3000` |
+| `DATABASE_URL` | Chaîne de connexion PostgreSQL |
+
+### 3. Dépendances et base de données
+
+```bash
+npm install
+npx prisma migrate dev
+```
+
+### 4. Lancer le serveur
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ouvre [http://127.0.0.1:3000](http://127.0.0.1:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Commande | Rôle |
+| --- | --- |
+| `npm run dev` | Serveur de développement |
+| `npm run build` | Build de production |
+| `npm run start` | Lance le build de production |
+| `npm run lint` | Vérifie le code avec ESLint |
