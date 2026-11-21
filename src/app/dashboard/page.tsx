@@ -10,6 +10,19 @@ export default async function DashboardPage() {
     redirect("/");
   }
 
+  // Le refresh token Spotify n'a pas pu être utilisé : il faut se reconnecter
+  if (session.error === "RefreshAccessTokenError") {
+    return (
+      <div className="space-y-4">
+        <h1 className="text-2xl font-bold">Session expirée</h1>
+        <p className="text-slate-300">
+          Ta connexion à Spotify a expiré. Déconnecte-toi puis reconnecte-toi
+          pour continuer.
+        </p>
+      </div>
+    );
+  }
+
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
     select: { lastLogin: true, name: true, email: true },
